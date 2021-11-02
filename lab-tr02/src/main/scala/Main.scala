@@ -5,7 +5,7 @@ object Main {
   def main(args: Array[String]): Unit = {
     println("Hello, I'm TR02!")
 
-    val inpath = "E:\\Учёба!\\Scala\\new_project\\scalalab\\lab-tr02\\src\\main\\scala\\Simple.html"
+    val inpath = "C:\\Users\\valera\\IdeaProjects\\scalalab\\lab-tr02\\src\\main\\scala\\Simple.html"
 
     transformation(inpath)
   }
@@ -26,7 +26,7 @@ object Main {
 
     val words = readFile
       .flatMap(lines => lines.split(" "))
-      .filter(word => word.contains("<") && word.contains (">"))
+      .filter(word => (word.startsWith("<") && word.endsWith(">")))
     val counts = words
       .map(w => (w, 1))
       .reduceByKey(_ + _)
@@ -35,10 +35,10 @@ object Main {
 
     val df = counts.toDF(columns: _*)
 
-    df.printSchema()
-    df.show()
+    df.coalesce(1).write.option("header", true).mode("append").csv("file:///C:/Users/valera/Downloads/htmls")
 
-    //df.write.option("header", true).mode("append").csv("E:\\Учёба!\\Scala\\new_project\\scalalab\\lab-tr02\\src\\main\\scala\\new.csv")
+    df.show()
+    df.printSchema()
 
     spark.stop()
 
