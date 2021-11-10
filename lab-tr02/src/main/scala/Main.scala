@@ -18,13 +18,12 @@ object Main {
     println(s"input data: $map")
 
     val inpath = map.get("inpath").getOrElse(throw new RuntimeException("not set variable 'inpath'"))
-    //val mask = map.get("mask").getOrElse(throw new RuntimeException("not set variable 'mask'"))
-    //val outpath = map.get("outpath").getOrElse(throw new RuntimeException("not set variable 'outpath'"))
+    val outpath = map.get("outpath").getOrElse(throw new RuntimeException("not set variable 'outpath'"))
 
-    transformation(inpath)
+    transformation(inpath, outpath)
   }
 
-  def transformation(inpath: String) = {
+  def transformation(inpath: String, outpath: String) = {
 
     val spark = SparkSession
       .builder()
@@ -51,7 +50,9 @@ object Main {
 
     val df = counts.toDF(columns: _*)
 
-    //df.coalesce(1).write.option("header", true).mode("append").csv("file:///C:/Users/valera/Downloads/htmls")
+    df.coalesce(1).write.option("header", true).mode("append").csv(outpath)
+
+    //path="file:///C:/Users/valera/Downloads/htmls"
 
     df.show()
     df.printSchema()
